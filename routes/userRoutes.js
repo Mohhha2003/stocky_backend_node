@@ -8,7 +8,6 @@ const authController=require('../controllers/authController');
 router.post(
     '/api/signup',
     bodyParser.urlencoded({extended:true}),
-    check('username').not().isEmpty(),
     check('email')
     .not()
     .isEmpty().withMessage('email is required')
@@ -39,7 +38,7 @@ router.post(
 router.post('/api/logout', authController.postLogout );
 router.get('/api/user/all', authController.getAllprofile );
 router.get('/api/user/:id', authController.getByid );
-router.put('/api/user/:id', authController.updateProfile );
+router.put('/api/user', authController.updateProfile );
 router.delete('/api/user/:id', authController.deleteProfile );
 
 

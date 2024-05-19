@@ -7,7 +7,7 @@ const homeController = require('../controllers/homeController');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) =>{
-      cb(null, path.join(__dirname, "../images"));
+      cb(null, path.join( "/images"));
     },
   
     filename: (req, file, cb) => {
@@ -26,9 +26,9 @@ const storage = multer.diskStorage({
     }
   });
 
-
+router.get('/api/products/search',homeController.search);
 router.get('/api/gender/:gender',homeController.gender);
-router.get('/api/category/:category',homeController.category);
+router.get('/api/category/',homeController.category);
 router.get('/api/products',homeController.allProducts);
 router.get('/api/product/', homeController.getProductById );
 router.delete('/api/product/', homeController.deleteProduct );
@@ -36,7 +36,7 @@ router.patch('/api/products/', upload.single("image"), homeController.updateProd
 
 router.get('/api/', homeController.getProductByOwnerId );
 
-router.post('/api/add', upload.single("image"), homeController.addProduct);
+router.post('/api/add/', upload.single("image"), homeController.addProductv2);
 
 
 module.exports = router;
