@@ -1,6 +1,5 @@
 const app = require('./app');
 const connectDb = require('./config/db');
-connectDb();
 
 
 
