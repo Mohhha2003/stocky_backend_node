@@ -4,6 +4,9 @@ const fs = require("fs");
 
 
 const searchByDesc =  async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
   console.log(req.body);  
   try {
     const { keyword } = req.body;
@@ -14,6 +17,11 @@ const searchByDesc =  async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
     res.status(500).json({ error: 'Internal s erver error' });
   }
 }
@@ -82,6 +90,11 @@ const addProductv2 = async(req,res) =>{
         price :req.body.price,
         ownerId :req.body.ownerId
       });
+
+      if(req.file && req.file.path){
+        product.image = req.file.path;
+      }
+
 
       if(req.file && req.file.path){
         product.image = req.file.path;

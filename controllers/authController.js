@@ -57,6 +57,7 @@ const postSignin = async (req, res) => {
 
 
     res.status(200).json({ message: 'User signed in successfully',data :  user ,token});
+
     console.log(user) 
   } catch (error) {
     console.error(error);

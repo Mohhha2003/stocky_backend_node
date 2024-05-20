@@ -17,6 +17,7 @@ const addToFavourite = async (req, res) => {
         // Check if the productId exists in the products collection
         const productExists = await Product.exists({ _id: req.body.productId });
         if (!productExists) {
+
           console.log('Product dosent exist')
             return res.status(404).json({ error: 'Product not found' });
         }}catch{
@@ -24,6 +25,7 @@ const addToFavourite = async (req, res) => {
         }
         const itemExists = await Favourite.exists({ ownerId: req.body.ownerId ,productId: req.body.productId });
         if (itemExists) {
+
           console.log('Fav is exist')
             return res.status(404).json({ error: 'item already exist' });
         }
@@ -32,6 +34,7 @@ const addToFavourite = async (req, res) => {
       res.status(201).json({ result: "Item added successfully" });
     } catch (error) {
       console.error(error);
+
       console.log(error.message);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -59,12 +62,16 @@ const deleteitem = async (req, res) => {
       const userExists = await  User.exists({ _id: req.body.ownerId });
       if (!userExists) {
         console.log('user is not here');
+
           return res.status(404).json({ error: 'User not found' });
       }
 
       // Check if the productId exists in the products collection
       const productExists = await Product.exists({ _id: req.body.productId });
       if (!productExists) {
+          return res.status(404).json({ error: 'Product not found' });
+      }}catch{
+
         console.log('product is not here');
           return res.status(404).json({ error: 'Product not found' });
       }}catch{
@@ -77,6 +84,7 @@ const deleteitem = async (req, res) => {
       if (!itemExists) {
         return res.status(404).json({message: 'Item is not found'});
       }
+
       console.log('deleted the item');
       await Favourite.deleteOne({ ownerId: req.body.ownerId, productId: req.body.productId });
       res.status(200).json({ message: 'Item removed from favourite successfully' });

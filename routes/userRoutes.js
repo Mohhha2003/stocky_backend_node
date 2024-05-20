@@ -38,6 +38,7 @@ router.post(
 router.post('/api/logout', authController.postLogout );
 router.get('/api/user/all', authController.getAllprofile );
 router.get('/api/user/:id', authController.getByid );
+router.put('/api/user/:id', authController.updateProfile );
 router.put('/api/user', authController.updateProfile );
 router.delete('/api/user/:id', authController.deleteProfile );
 
