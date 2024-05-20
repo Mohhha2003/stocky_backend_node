@@ -17,12 +17,16 @@ const addToFavourite = async (req, res) => {
         // Check if the productId exists in the products collection
         const productExists = await Product.exists({ _id: req.body.productId });
         if (!productExists) {
+
+          console.log('Product dosent exist')
             return res.status(404).json({ error: 'Product not found' });
         }}catch{
           return res.status(500).json({ error: 'error with id' });
         }
         const itemExists = await Favourite.exists({ ownerId: req.body.ownerId ,productId: req.body.productId });
         if (itemExists) {
+
+          console.log('Fav is exist')
             return res.status(404).json({ error: 'item already exist' });
         }
       await item.save();
@@ -30,6 +34,8 @@ const addToFavourite = async (req, res) => {
       res.status(201).json({ result: "Item added successfully" });
     } catch (error) {
       console.error(error);
+
+      console.log(error.message);
       res.status(500).json({ error: "Internal server error" });
     }
   };
@@ -55,6 +61,8 @@ const deleteitem = async (req, res) => {
       // Check if the ownerId exists in the users collection
       const userExists = await  User.exists({ _id: req.body.ownerId });
       if (!userExists) {
+        console.log('user is not here');
+
           return res.status(404).json({ error: 'User not found' });
       }
 
@@ -63,6 +71,11 @@ const deleteitem = async (req, res) => {
       if (!productExists) {
           return res.status(404).json({ error: 'Product not found' });
       }}catch{
+
+        console.log('product is not here');
+          return res.status(404).json({ error: 'Product not found' });
+      }}catch{
+        console.log(e.message);
         return res.status(500).json({ error: 'error with id' });
       }
 
@@ -72,6 +85,7 @@ const deleteitem = async (req, res) => {
         return res.status(404).json({message: 'Item is not found'});
       }
 
+      console.log('deleted the item');
       await Favourite.deleteOne({ ownerId: req.body.ownerId, productId: req.body.productId });
       res.status(200).json({ message: 'Item removed from favourite successfully' });
   } catch(error){

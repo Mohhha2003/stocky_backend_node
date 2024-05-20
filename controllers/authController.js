@@ -34,9 +34,11 @@ const postSignup= async (req, res) => {
   }
 
 const postSignin = async (req, res) => {
+  console.log(req.body);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Top')
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -45,6 +47,7 @@ const postSignin = async (req, res) => {
     // Find user by email and password
     const user = await authModel.findOne({ email, password });
     if (!user) {
+      console.log('not found')
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
@@ -54,6 +57,8 @@ const postSignin = async (req, res) => {
 
 
     res.status(200).json({ message: 'User signed in successfully',data :  user ,token});
+
+    console.log(user) 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -86,15 +91,18 @@ const getByid =  async (req, res) => {
 
 
 const updateProfile =  async (req, res) => {
+  console.log('in the method')
+  console.log(req.body)
   try {
     const updatedProfile = await authModel.findByIdAndUpdate(
-      req.params.id,
+      req.body.id,
       req.body,
       { new: true }
-    );
+    );  
     if (!updatedProfile) {
       return res.status(404).json({ msg: "Profile not found" });
     }
+    console.log('Done')
     return res.status(200).json(updatedProfile);
   } catch (error) {
     return res.status(500).send(error.message);

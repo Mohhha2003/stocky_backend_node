@@ -24,7 +24,9 @@ const addProduct = async (req, res) => {
       let cartItem = await CartItem.findOne({ ownerId: ownerId, productId: productId });
       if (cartItem) {
         // If item exists, update quantity
-        cartItem.quantity += quantity *1;
+        cartItem.quantity += 1;
+        console.log(`The Quantity is ${cartItem.quantity}`)
+
       } else {
         // If item does not exist, create new cart item
         cartItem = new CartItem({ ownerId, productId, name, price, quantity });
