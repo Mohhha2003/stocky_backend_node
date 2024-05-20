@@ -8,7 +8,6 @@ const authController=require('../controllers/authController');
 router.post(
     '/api/signup',
     bodyParser.urlencoded({extended:true}),
-    check('username').not().isEmpty(),
     check('email')
     .not()
     .isEmpty().withMessage('email is required')

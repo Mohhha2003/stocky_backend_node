@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
     }
   });
 
-
+router.get('/api/products/search',homeController.search);
 router.get('/api/gender/:gender',homeController.gender);
 router.get('/api/category/:category',homeController.category);
 router.get('/api/products',homeController.allProducts);
@@ -36,7 +36,7 @@ router.patch('/api/products/', upload.single("image"), homeController.updateProd
 
 router.get('/api/', homeController.getProductByOwnerId );
 
-router.post('/api/add', upload.single("image"), homeController.addProduct);
+router.post('/api/add/', upload.single("image"), homeController.addProductv2);
 
 
 module.exports = router;

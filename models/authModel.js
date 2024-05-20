@@ -4,11 +4,10 @@ const mongoose =require("mongoose");
 
 
 const userSchema=mongoose.Schema({
-    userId:String,
     name:String,
-    username:String,
     email:String,
-    password:String
+    password:String,
+    image:String
 });
 
 const authModel = mongoose.model("User",userSchema);

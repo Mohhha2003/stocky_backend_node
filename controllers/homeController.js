@@ -1,6 +1,22 @@
 const Product = require('../models/homeModel');
-const { resolveSoa } = require("dns");
+const User = require('../models/authModel');
 const fs = require("fs");
+
+
+const searchByDesc =  async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    // Query products from the database based on keyword in description
+    const products = await Product.find({ description: { $regex: keyword, $options: 'i' } });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 
 
 const getProductById = async (req, res) => {
@@ -31,24 +47,81 @@ const getProductByOwnerId = async (req, res) => {
   }
 }
 
-const addProduct = (req, res) => {
-  const product = new Product();
-
-  product.name = req.body.name;
-  product.description = req.body.description;
-  product.category = req.body.category;
-  product.gender = req.body.gender;
-  product.price = req.body.price;
-  product.ownerId = req.body.ownerId;
+// const addProduct =  (req, res) => {
+//   const product = new Product();
+//   product.name = req.body.name;
+//   product.description = req.body.description;
+//   product.category = req.body.category;
+//   product.gender = req.body.gender;
+//   product.price = req.body.price;
+//   product.ownerId = req.body.ownerId;
   
-  if(req.file && req.file.path){
-    product.image = req.file.path;
-  }
+//   if(req.file && req.file.path){
+//     product.image = req.file.path;
+//   }
 
-  product.save()
-  .then(() => res.status(201).json({result : "product added successfully"}))
-  .catch((error) => res.status(500).json({error : error.message}));
+//   product.save()
+//   .then(() => res.status(201).json({result : "product added successfully"}))
+//   .catch((error) => res.status(500).json({error : error.message}));
+// }
+const addProductv2 = async(req,res) =>{
+  try {
+    const user =await User.exists({_id :req.body.ownerId});
+    
+    if(!user){
+      return res.status(404).json({
+        message : "User not Found"
+      });
+    }
+      const product = new Product({
+        name : req.body.name,
+        description : req.body.description,
+        category : req.body.category,
+        gender : req.body.gender,
+        price :req.body.price,
+        ownerId :req.body.ownerId
+      });
+
+      if(req.file && req.file.path){
+        product.image = req.file.path;
+      }
+
+      await product.save();
+      res.status(200).json({
+        message : product
+      })
+    }  catch (error) {
+    res.status(404).json({
+      status : 404, 
+      error : "User Not Found"
+    })
+  }
 }
+
+// const addProduct =  async (req, res) => {
+//   try{
+//     const product = new Product();
+//     product.name = req.body.name;
+//     product.description = req.body.description;
+//     product.category = req.body.category;
+//     product.gender = req.body.gender;
+//     product.price = req.body.price;
+//     product.ownerId = req.body.ownerId;    
+//     if(req.file && req.file.path){
+//       product.image = req.file.path;
+//     }
+//     // Check if the ownerId exists in the users collection
+
+//     const userExists = await User.exists({ _id: product.ownerId });
+//     if (!userExists) {
+//       return res.status(404).json({ error: 'User not found' });
+//     } 
+//       await product.save()
+//       res.status(201).json({result : "product added successfully"});
+//   } catch{
+//     (error) => res.status(500).json({error : error.message})
+//   };
+// }
 
 const updateProduct = async (req, res) => {
 
@@ -164,12 +237,13 @@ const category = async (req, res) => {
 
 
   module.exports = {
+    search: searchByDesc,
     getProductById,
     getProductByOwnerId,
-    addProduct,
     updateProduct,
     deleteProduct,
     gender,
     category,
-    allProducts
+    allProducts,
+    addProductv2
   }
